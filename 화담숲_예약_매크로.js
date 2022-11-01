@@ -6,7 +6,8 @@
  * @author Henry <lim8143@gmail.com>
  */
 // 예약할 사람수
-let number = 2;
+let adult = 2;
+let child = 0;
 // 대기(단위: 초)
 let sleepSec = 1;
 
@@ -16,6 +17,7 @@ let sleepSec = 1;
 let target = undefined;
 let isContinue = true;
 let workCount = 1;
+let total = adult + child;
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -33,7 +35,7 @@ do {
   const buttons = $(":button").filter("[id*='selectTime']");
   
   for (_button of buttons) {
-    if (_button.children[1].innerText >= number) {
+    if (_button.children[1].innerText >= total) {
       target = _button;
       break;
     }
@@ -53,9 +55,13 @@ if (isContinue) {
 
 
   // 수량 선택
-  for (let idx = 0; idx < number; idx++) {
+  for (let idx = 0; idx < adult; idx++) {
     $("#btnPlus0").click();
   }
+  for (let idx = 0; idx < child; idx++) {
+    $("#btnPlus1").click();
+  }
+  
   fn_Next();
 
   beep();
