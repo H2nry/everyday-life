@@ -1,3 +1,29 @@
+function deleteIt(lang, gmname,lssn_cd,org_sect,fake){
+  var url;
+
+  if ( lang == "KOR" ) {
+    if(!confirm("[" + gmname + "] 과목을 삭제하시겠습니까?")){
+      return;
+    }
+  } else {
+    if(!confirm("Do you wish to delete ("+gmname+")?")){
+      return;
+    }
+  }
+
+  url	= "d_Sugang_SaveDel.jsp?";
+  url	= url + "flag=del";
+  url	= url + "&lssn_cd=" + lssn_cd;
+  url	= url + "&org_sect=" + org_sect;
+  url	= url + "&fake=" + fake;
+  
+
+  // NetFunnel 자원사용 요청 함수(2017.06.14)
+  NetFunnel_Action({service_id:'service_1',action_id:'submitB',popup_target:top.fra2.fra2_2,frame_block_list:[{win:top.fra1},{win:top.fra2.fra2_1},{win:top.fra2.fra2_3}]},function(ev,ret){
+      parent.fra2_4.location.href	= url;
+  });
+  
+}
 
 function saveIt(lang, gmname,lssn_cd,org_sect,isu_code,isu_sect,hakjm,subjt_no,emp_no,grade,mlt_mjr,len,o_org_sect,no){
   var object = document.myform;
