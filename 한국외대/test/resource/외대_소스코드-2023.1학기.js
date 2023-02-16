@@ -25,7 +25,7 @@ function deleteIt(lang, gmname,lssn_cd,org_sect,fake){
   
 }
 
-function saveIt(lang, gmname,lssn_cd,org_sect,isu_code,isu_sect,hakjm,subjt_no,emp_no,grade,mlt_mjr,len,o_org_sect,no){
+function saveIt(lang, gmname,lssn_cd,org_sect,isu_code,isu_sect,hakjm,subjt_no,emp_no,grade,mlt_mjr,len,o_org_sect,no) {
   var object = document.myform;
   var url;
   var jea_su;
