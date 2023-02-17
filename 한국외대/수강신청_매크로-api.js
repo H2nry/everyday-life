@@ -75,29 +75,29 @@ async function mock(uri) {
 async function main() {
     const results = await Promise.all(
         TASKS.map(
-            // _task => fetch(makeRequest(_task))
-            _task => mock(makeRequest(_task))
+            _task => fetch(makeRequest(_task))
         )
     );
 
+    for (let _idx = 0; _idx < results.length; _idx++) {
+        const _result = results[_idx];
+        const _task = TASKS[_idx];
 
-    // for (let _idx = 0; _idx < results.length; _idx++) {
-    //     const _result = results[_idx];
-    //     const _task = TASKS[_idx];
+        const response = await _result.text();
 
-    //     const response = await _result.text();
+        let message = `${_task.CODE}의 `
+        if (_task.TYPE == TASK_TYPE.SAVE) {
+            message += `수강 신청을 ${response.includes("저장완료") ? "성공" : "실패"} 했습니다.`
+        } else if (_task.TYPE == TASK_TYPE.DEL) {
+            message += `수강 철회를 ${response.includes("삭제완료") ? "성공" : "실패"} 했습니다.`
+        } else {
+            message += "알 수 없는 에러 발생 !"
+            console.error(response);
+        }
 
-    //     let message = `${_task.CODE}의 `
-    //     if (_task.TYPE == TASK_TYPE.SAVE) {
-    //         message += `수강 신청을 ${response.includes("수강신청") ? "성공" : "실패"} 했습니다.`
-    //     } else if (_task.TYPE == TASK_TYPE.DEL) {
-    //         message += `수강 철회를 ${response.includes("수강철회") ? "성공" : "실패"} 했습니다.`
-    //     } else {
-    //         message += "알 수 없는 에러 발생 !"
-    //     }
-
-    //     console.log(message);        
-    // }
+        console.log(message);
+        console.log("===============================================")  
+    }
 }
 
 main();
