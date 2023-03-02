@@ -1,17 +1,23 @@
 let TARGETS = {
-  "11906204": "TASK_1", // 순차통역 한->영 I. 월1-2
+  // "11906204": "TASK_1", // 순차통역 한->영 I. 월1-2
   "12206202": "TASK_2", // 영->한 일반번역. 수5-6
+  "11806203": "TASK_3", // 순차통역 영->한 I. 월3-4
 }
 let TASKS = {
-  "TASK_1": [
-    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=del&lssn_cd=11906203&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
-    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11906204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
-    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11906203&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0"
-  ],
+  // "TASK_1": [
+  //   "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=del&lssn_cd=11906203&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
+  //   "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11906204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
+  //   "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11906203&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0"
+  // ],
   "TASK_2": [
     "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=del&lssn_cd=12206204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
     "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=12206202&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
     "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=12206204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0"
+  ],
+  "TASK_3": [
+    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=del&lssn_cd=11806204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
+    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11806203&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0",
+    "http://vsugang4.hufs.ac.kr:8080/sugang/jsp/d_sugang/d_Sugang_SaveDel.jsp?flag=save&lssn_cd=11806204&org_sect=D&isu_code=10&isu_sect=11&jea_su=0&hakjm=2&subjt_no=1&emp_no=&grade=1&sun_su=0"
   ],
 }
 let time = 0.3; // 초
@@ -29,8 +35,12 @@ async function apiFetch(uri) {
   let result = await fetch(uri);
   let response = await result.text();
 
-  if (response.includes("200")) {
-    console.log(`${uri} 성공`);
+  if (response.includes("저장완료")) {
+    console.log(`수강 신청 "${uri}" 성공`);
+  } else if (response.includes("삭제완료")) {
+    console.log(`수강 철회 "${uri}" 성공`);
+  } else {
+    console.error(`알수없는 에러: ${uri}`)
   }
 }
 
@@ -40,11 +50,12 @@ let lectureList = rootFrame?.frames['fra2_2'];
 let scripts = lectureList.document.querySelectorAll("a") ?? [];
 let successList = [];
 
-let cnt = 1;
+let cnt = 0;
+let successLoopCnt = 0;
 let flag = true;
 
 do {
-  console.log(`매크로 ${cnt++} 회차 도는 중..`);
+  if (cnt++ % 10 == 0) console.log(`매크로 ${cnt} 회차 도는 중..`);
 
   for (const target of Object.keys(TARGETS)) {
     let task = TARGETS[target];
@@ -71,7 +82,14 @@ do {
     }
   }
 
-  if (successList.length > 0) console.log(successList);
+  if (successList.length > 0) {
+    console.log(successList);
+
+    if (successLoopCnt++ % 10 == 0) {
+      successList = []
+      successLoopCnt = 0;
+    }
+  }
 
   topMenu.submitIt('KOR');
   await sleep(time * 1000);
