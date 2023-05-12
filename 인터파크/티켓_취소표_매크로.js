@@ -1,5 +1,5 @@
 const areas = [
-    구역번호,
+    "구역번호"
 ]
 let minWaitTime = 0.8 //초
 let maxWaitTime = 4 //초
@@ -33,7 +33,7 @@ while (isContinue && flag) {
     const _idx = Math.floor(Math.random() * targetAreas.length);
     const targetArea = targetAreas[_idx];
     let _rootFrame = frames['ifrmSeat'];
-    _rootFrame.fnBlockSeatUpdate('', '', _area);
+    _rootFrame.fnBlockSeatUpdate('', '', targetArea);
 
     let _isLoading = true;
     let _seatFrame = _rootFrame.frames['ifrmSeatDetail'];
