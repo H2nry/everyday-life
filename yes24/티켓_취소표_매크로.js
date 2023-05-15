@@ -49,8 +49,8 @@ while (isContinue && flag) {
     for(_target of _seatFrame.document.querySelectorAll('div[name=tk]')) {
         if (_target.className === 's13') continue;
 
-        _target.click()
-        clickedCount++;
+        _target.click();
+        if (++clickedCount >= count) break;
     }
 
     if (clickedCount >= count) {
